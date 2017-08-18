@@ -520,7 +520,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             if (crc_ret == UNZ_CRCERROR) {
                 //CRC ERROR
                 success = NO;
-                break;
+                unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileInfoNotLoadable userInfo:@{NSLocalizedDescriptionKey:@"crc check failed for file"}];
             }
             ret = unzGoToNextFile(zip);
             
@@ -568,30 +568,11 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         [delegate zipArchiveProgressEvent:fileSize total:fileSize];
     }
     
-    NSError *retErr = nil;
-    if (crc_ret == UNZ_CRCERROR)
-    {
-        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"crc check failed for file"};
-        retErr = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileInfoNotLoadable userInfo:userInfo];
+    if (error && unzippingError) {
+        *error = unzippingError;
     }
-    
-    if (error) {
-        if (unzippingError) {
-            *error = unzippingError;
-        }
-        else {
-            *error = retErr;
-        }
-    }
-    if (completionHandler)
-    {
-        if (unzippingError) {
-            completionHandler(path, success, unzippingError);
-        }
-        else
-        {
-            completionHandler(path, success, retErr);
-        }
+    if (completionHandler) {
+        completionHandler(path, success, unzippingError);
     }
     return success;
 }
