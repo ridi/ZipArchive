@@ -512,7 +512,6 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             crc_ret = unzCloseCurrentFile(zip);
             if (crc_ret == UNZ_CRCERROR) {
                 //CRC ERROR
-                success = NO;
                 unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileInfoNotLoadable userInfo:@{NSLocalizedDescriptionKey:@"crc check failed for file"}];
             }
             ret = unzGoToNextFile(zip);
