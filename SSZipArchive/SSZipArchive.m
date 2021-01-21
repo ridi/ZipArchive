@@ -717,17 +717,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     if (!canceled && [delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
         [delegate zipArchiveProgressEvent:fileSize total:fileSize];
     }
-    
-<<<<<<< HEAD
-    if (error && unzippingError) {
-        *error = unzippingError;
-=======
+
     NSError *retErr = nil;
     if (crc_ret == MZ_CRC_ERROR)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"crc check failed for file"};
-        retErr = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileInfoNotLoadable userInfo:userInfo];
->>>>>>> origin0master
+        retErr = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileCrcError userInfo:userInfo];
     }
     if (completionHandler) {
         completionHandler(path, success, unzippingError);
