@@ -27,7 +27,6 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
     SSZipArchiveErrorCodeFileContentNotReadable = -4,
     SSZipArchiveErrorCodeFailedToWriteFile      = -5,
     SSZipArchiveErrorCodeInvalidArguments       = -6,
-    SSZipArchiveErrorCodeFileCrcError           = -7,
 };
 
 @protocol SSZipArchiveDelegate;
@@ -142,6 +141,7 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
 - (void)zipArchiveWillUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo;
 - (void)zipArchiveDidUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo unzippedPath:(NSString *)unzippedPath;
 
+- (BOOL)zipArchiveShouldStopAsCrcErrorAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 - (BOOL)zipArchiveShouldUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;

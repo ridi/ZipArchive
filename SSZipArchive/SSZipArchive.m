@@ -671,7 +671,15 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             crc_ret = unzCloseCurrentFile(zip);
             if (crc_ret == UNZ_CRCERROR) {
                 //CRC ERROR
-                unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileCrcError userInfo:@{NSLocalizedDescriptionKey:@"crc check failed for file"}];
+                BOOL stop = YES;
+                if ([delegate respondsToSelector:@selector(zipArchiveShouldStopAsCrcErrorAtIndex:totalFiles:archivePath:fileInfo:)]) {
+                    stop = [delegate zipArchiveShouldStopAsCrcErrorAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
+                                                               archivePath:path fileInfo:fileInfo];
+                }
+                if (stop) {
+                    success = NO;
+                    break;
+                }
             }
             ret = unzGoToNextFile(zip);
             
@@ -722,7 +730,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     if (crc_ret == MZ_CRC_ERROR)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"crc check failed for file"};
-        retErr = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileCrcError userInfo:userInfo];
+        retErr = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileInfoNotLoadable userInfo:userInfo];
     }
     if (completionHandler) {
         completionHandler(path, success, unzippingError);
