@@ -43,7 +43,8 @@ The following steps should be taken by project maintainers when they update mini
 "HAVE_WZAES"
 "HAVE_ZLIB"
 
-With the exception of the last two: "MZ_ZIP_SIGNING" "_POSIX_C_SOURCE=200112L"
+With the addition of:
+"MZ_ZIP_NO_SIGNING"
 
 5. Set those flags in SSZipArchive.podspec (for CocoaPods) and in ZipArchive.xcodeproj (for Carthage)
 6. Replace the .h and .c files with the latest ones, except for `mz_compat.h`, which is customized to expose some struct in SSZipCommon.h and to provide support for optional aes.
